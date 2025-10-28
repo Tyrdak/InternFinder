@@ -87,7 +87,7 @@ export default function OffersSearchFilter() {
               )}
             </div>
             <div className="flex gap-2">
-              <Link href={`/offers/${offer.id}`} className="inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-800 hover:bg-gray-50">
+              <Link href={`/offers/${String(offer.id)}`} className="inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-800 hover:bg-gray-50">
                 Voir l'offre
               </Link>
               {offer.final_url ? (

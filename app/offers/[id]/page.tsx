@@ -2,8 +2,13 @@ import { theirStackSearch, cacheGetJobById } from "@/src/lib/theirstack";
 import Button from "@/src/components/ui/Button";
 
 export default async function OfferDetail({ params }: { params: { id: string } }) {
-  const cached = cacheGetJobById(params.id);
-  const job = cached ?? (await theirStackSearch({ job_id_or: [params.id], limit: 1, include_total_results: false }))[0];
+  const idNum = Number(params.id);
+  const cached = cacheGetJobById(!Number.isNaN(idNum) ? idNum : params.id);
+  const job =
+    cached ??
+    (!Number.isNaN(idNum)
+      ? (await theirStackSearch({ job_id_or: [idNum], limit: 1, include_total_results: false }))[0]
+      : undefined);
 
   if (!job) {
     return (
