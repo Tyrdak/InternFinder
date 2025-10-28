@@ -16,6 +16,9 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Navigation principale">
+          <Link href="/" className="text-sm text-gray-600 hover:text-(--brand) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--brand) rounded">
+            Accueil
+          </Link>
           <Link href="/offers" className="text-sm text-gray-600 hover:text-(--brand) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--brand) rounded">
             Offres
           </Link>
@@ -54,6 +57,7 @@ export default function Navbar() {
       >
         <div className="mx-auto max-w-7xl px-4 py-4">
           <nav className="grid gap-4" aria-label="Navigation mobile">
+            <Link href="/" className="rounded px-2 py-2 text-base text-gray-700 hover:bg-gray-100">Accueil</Link>
             <Link href="/offers" className="rounded px-2 py-2 text-base text-gray-700 hover:bg-gray-100">Offres</Link>
             <Link href="/companies" className="rounded px-2 py-2 text-base text-gray-700 hover:bg-gray-100">Entreprises</Link>
             <Link href="/about" className="rounded px-2 py-2 text-base text-gray-700 hover:bg-gray-100">À propos</Link>
