@@ -1,0 +1,29 @@
+import { NextRequest, NextResponse } from "next/server";
+import { theirStackSearch, cacheGetByBody, cacheSetByBody } from "@/src/lib/theirstack";
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json().catch(() => ({}));
+    // Base filters: internships only, limit 1 token → 1 offer
+    const baseBody = {
+      limit: 1,
+      include_total_results: false,
+      employment_statuses_or: ["internship"],
+      posted_at_max_age_days: 30,
+      ...body,
+    };
+
+    const cached = cacheGetByBody(baseBody as any);
+    if (cached) {
+      return NextResponse.json({ data: cached, cached: true });
+    }
+
+    const jobs = await theirStackSearch(baseBody as any);
+    cacheSetByBody(baseBody as any, jobs);
+    return NextResponse.json({ data: jobs });
+  } catch (e: any) {
+    return NextResponse.json({ error: e?.message ?? "Unknown error" }, { status: 500 });
+  }
+}
+
+
