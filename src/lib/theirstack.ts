@@ -77,4 +77,36 @@ export function cacheGetJobById(id: string | number): TheirStackJob | undefined 
   return jobCache.get(id);
 }
 
+// Optional persistent KV (Vercel KV REST)
+async function kvFetch(path: string, init?: RequestInit): Promise<Response | null> {
+  const base = process.env.KV_REST_API_URL;
+  const token = process.env.KV_REST_API_TOKEN;
+  if (!base || !token) return null;
+  return fetch(`${base}${path}`, {
+    ...init,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      ...(init?.headers || {}),
+    },
+    cache: "no-store",
+  });
+}
+
+export async function kvSetJob(job: TheirStackJob): Promise<void> {
+  const res = await kvFetch(`/set/theirstack:job:${job.id}`, {
+    method: "POST",
+    body: JSON.stringify(job),
+  });
+  if (!res) return; // KV not configured
+}
+
+export async function kvGetJob(id: string | number): Promise<TheirStackJob | null> {
+  const res = await kvFetch(`/get/theirstack:job:${id}`);
+  if (!res) return null;
+  if (!res.ok) return null;
+  const data = await res.json().catch(() => null);
+  return (data?.result as TheirStackJob) ?? null;
+}
+
 
