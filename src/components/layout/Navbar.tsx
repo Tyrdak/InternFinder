@@ -25,8 +25,8 @@ export default function Navbar() {
           <Link href="/companies" className="text-sm text-gray-600 hover:text-(--brand) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--brand) rounded">
             Entreprises
           </Link>
-          <Link href="/about" className="text-sm text-gray-600 hover:text-(--brand) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--brand) rounded">
-            À propos
+          <Link href="/students" className="text-sm text-gray-600 hover:text-(--brand) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--brand) rounded">
+            Étudiants
           </Link>
         </nav>
 
@@ -60,7 +60,7 @@ export default function Navbar() {
             <Link href="/" className="rounded px-2 py-2 text-base text-gray-700 hover:bg-gray-100">Accueil</Link>
             <Link href="/offers" className="rounded px-2 py-2 text-base text-gray-700 hover:bg-gray-100">Offres</Link>
             <Link href="/companies" className="rounded px-2 py-2 text-base text-gray-700 hover:bg-gray-100">Entreprises</Link>
-            <Link href="/about" className="rounded px-2 py-2 text-base text-gray-700 hover:bg-gray-100">À propos</Link>
+            <Link href="/students" className="rounded px-2 py-2 text-base text-gray-700 hover:bg-gray-100">Étudiants</Link>
           </nav>
           <div className="mt-4 flex gap-2">
             <Button className="flex-1">Publier une offre</Button>
