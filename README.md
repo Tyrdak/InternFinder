@@ -8,8 +8,7 @@
 </p>
 
 <div align="center">
-  <img alt="InternFinder" src="public/logo-blue.svg" height="100" />
-  <h1>InternFinder</h1>
+  <img alt="InternFinder" src="public/logo-blue.svg" height="200" />
   <p>La plateforme moderne pour trouver et publier des offres de stage.</p>
 </div>
 
@@ -18,6 +17,8 @@
 ## ✨ Aperçu
 
 InternFinder centralise des offres de stage vérifiées, propose une recherche efficace (mots‑clés, lieu, type), et permet de postuler simplement. Côté entreprises, la mise en ligne est fluide et la marque employeur valorisée.
+
+➡️ Guide dédié aux offres: voir `src/components/pages/offers/README.md`.
 
 Périmètre actuel:
 - Pages: Accueil, Offres (liste + détail), Entreprises, Étudiants

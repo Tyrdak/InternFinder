@@ -1,89 +1,43 @@
-/**
-# 🔄 Comment passer d'une seule offre à plusieurs offres (étape par étape)
+## 📄 Guide Offres (Offers)
 
-Ce guide explique comment modifier le code pour passer d'un affichage **d'une seule offre** (vue "détail") à un affichage **multiple** (vue "liste" avec plusieurs offres), ou réciproquement. On se réfère ici au composant `OffersSearchFilter`.
-
----
-
-## 1️⃣ Stocker plusieurs offres (état React)
-
-- **Affichage d'une seule offre** : on utilise `const [offer, setOffer] = React.useState<TheirStackJob | null>(null);`
-- **Affichage multiple** : on utilise `const [offers, setOffers] = React.useState<TheirStackJob[]>([]);`
-
-→ **Passez d'un seul état à l'autre selon l'affichage souhaité.**
+Ce guide documente le comportement de la page Offres: affichage multiple, pagination (sans infinite scroll), limite par page, et cache navigateur. Il se réfère au composant `src/components/pages/offers/OffersSearchFilter.tsx` et à l’API `app/api/offers/route.ts`.
 
 ---
 
-## 2️⃣ Récupérer les résultats de la recherche
+### 1) Affichage: une seule vs plusieurs offres
+- Une seule: utilisez l’état `offer: TheirStackJob | null` et affichez la carte si `offer` est non nul.
+- Plusieurs: utilisez l’état `offers: TheirStackJob[]` et mappez pour afficher chaque carte.
 
-Dans `fetchOffers`, selon le mode choisi :
-
-- **Pour une seule offre**  
-  ```js
-  setOffer(json?.data?.[0] ?? null);
-  ```
-- **Pour plusieurs offres**  
-  ```js
-  const items: TheirStackJob[] = Array.isArray(json?.data) ? json.data : [];
-  setOffers((prev) => (append ? [...prev, ...items] : items));
-  ```
-
-→ **Commentez ou dé-commentez la ligne appropriée, selon le mode voulu.**
+Le composant inclut des commentaires pour basculer entre les deux modes (recherche « détail » vs « liste »).
 
 ---
 
-## 3️⃣ Rendu du composant
-
-- **Affichage d'une seule offre (mode "détail")**  
-  Affichez la carte/interview SEULEMENT SI `offer` est non nul.
-
-  ```jsx
-  {offer && (
-    <SingleOfferCard job={offer} />
-  )}
-  ```
-
-- **Affichage multiple (mode "liste")**  
-  Parcourez `offers` pour afficher N cartes :
-
-  ```jsx
-  {offers.length > 0 && (
-    <div>
-      {offers.map((o) => <OfferCard key={o.id} job={o} />)}
-    </div>
-  )}
-  ```
+### 2) Pagination (sans infinite scroll)
+- La pagination est contrôlée par boutons « Page précédente / Page suivante ».
+- La fonction `fetchOffers(formDataOrParams, pageOverride?)` remplace la page courante et ne cumule pas.
+- La page est 0‑based côté UI. Adaptez côté API si besoin (1‑based).
 
 ---
 
-## 4️⃣ Cache local (localStorage)
-
-Quand vous sauvegardez/restaurez les résultats, adaptez le champ :
-
-- **Pour une seule offre**  
-  ```js
-  offer: json?.data?.[0] ?? null,
-  ```
-- **Pour plusieurs offres**  
-  ```js
-  offers: append ? [...offers, ...items] : items,
-  ```
-
-Et adaptez la restauration (`setOffer` OU `setOffers`) dans le useEffect d'initialisation.
+### 3) Limite stricte par page
+- La constante `LIMIT` dans `OffersSearchFilter.tsx` définit le nombre d’offres maximum par page.
+- L’UI n’affiche jamais plus que `LIMIT` éléments par page.
+- L’API reçoit `limit: LIMIT` et `page`.
 
 ---
 
-## ⚡ Résumé pour activer le mode "plusieurs offres"
-
-- Utilisez `offers` (tableau) pour le state.
-- Dans `fetchOffers`, utilisez le bloc qui manipule `offers` (et **non** `offer`).
-- Pour le rendu, mappez sur `offers`.
-- Sauvegardez/restaurez la clé `offers`.
-
-Pour repasser à une **seule offre**, faites l'inverse !
+### 4) Cache navigateur (persistance au refresh)
+- Sauvegarde dans `localStorage`: `{ offers, params, page, ts }`.
+- Restauration au montage pour recharger la dernière recherche et sa page.
 
 ---
 
-**N'hésitez pas à regarder les blocs de code commentés dans le composant `OffersSearchFilter.tsx` pour basculer rapidement.**
+### 5) Chemins utiles
+- Composant: `src/components/pages/offers/OffersSearchFilter.tsx`
+- API: `app/api/offers/route.ts`
 
-*/
+---
+
+### 6) Astuces rapides
+- Pour repasser à une seule offre, remplacez `setOffers(items)` par `setOffer(items[0] ?? null)` et ajustez le rendu.
+- Pour n’afficher qu’une colonne, le wrapper utilise `grid grid-cols-1`.
