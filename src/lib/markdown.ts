@@ -1,5 +1,5 @@
-// Minimal markdown → HTML converter for our job descriptions
-// Supports: headings (##), bold (**text**), unordered lists (- item), paragraphs
+// Convertisseur minimal de markdown en HTML pour les descriptions d'offres
+// Supports: titres (##), texte en gras (**text**), listes non ordonnées (- item), paragraphes
 
 function escapeHtml(input: string): string {
   return input
@@ -21,7 +21,7 @@ export function markdownToHtml(md: string): string {
 
   for (let raw of lines) {
     let line = raw.trimEnd();
-    // Heading level 2
+    // Sous-Titre
     const h2Match = /^##\s+(.+)$/.exec(line);
     if (h2Match) {
       flushList();
@@ -30,7 +30,7 @@ export function markdownToHtml(md: string): string {
       continue;
     }
 
-    // List item
+    // Élément de liste
     const liMatch = /^-\s+(.+)$/.exec(line);
     if (liMatch) {
       if (!inList) {
@@ -41,14 +41,14 @@ export function markdownToHtml(md: string): string {
       continue;
     }
 
-    // Blank line
+    // Ligne vide
     if (line.trim() === "") {
       flushList();
       htmlParts.push("");
       continue;
     }
 
-    // Paragraph
+    // Paragraphe
     flushList();
     htmlParts.push(`<p>${inline(line)}</p>`);
   }
@@ -57,7 +57,7 @@ export function markdownToHtml(md: string): string {
 }
 
 function inline(text: string): string {
-  // Bold **text** → <strong>
+  // Texte en gras **text** → <strong>
   let out = escapeHtml(text);
   out = out.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
   return out;
