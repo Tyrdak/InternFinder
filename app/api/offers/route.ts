@@ -3,6 +3,12 @@ import { theirStackSearch, cacheGetByBody, cacheSetByBody } from "@/src/lib/thei
 
 export async function POST(req: NextRequest) {
   try {
+    if (!process.env.THEIRSTACK_API_KEY) {
+      return NextResponse.json(
+        { error: "Missing THEIRSTACK_API_KEY env var on server" },
+        { status: 500 }
+      );
+    }
     const body = await req.json().catch(() => ({}));
     // Base filters: internships only, limit 1 token → 1 offer
     const baseBody = {
