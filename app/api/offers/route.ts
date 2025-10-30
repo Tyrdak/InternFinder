@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { theirStackSearch, cacheGetByBody, cacheSetByBody } from "@/src/lib/theirstack";
+import config from "@/src/config.json";
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,12 +11,12 @@ export async function POST(req: NextRequest) {
       );
     }
     const body = await req.json().catch(() => ({}));
-    // Base filters: internships only, limit 1 token → 1 offer
+    // Base filters: récupérés depuis src/config.json
     const baseBody = {
-      limit: 1,
+      limit: config.offers.limit,
       include_total_results: false,
-      employment_statuses_or: ["internship"],
-      posted_at_max_age_days: 30,
+      employment_statuses_or: config.offers.employmentStatuses,
+      posted_at_max_age_days: config.offers.postedAtMaxAgeDays,
       ...body,
     };
 

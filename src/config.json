@@ -1,0 +1,8 @@
+{
+  "offers": {
+    "limit": 2,
+    "postedAtMaxAgeDays": 30,
+    "employmentStatuses": ["internship"]
+  }
+}
+

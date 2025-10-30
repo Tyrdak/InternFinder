@@ -4,6 +4,7 @@ import React from "react";
 import Button from "@/src/components/ui/Button";
 import Link from "next/link";
 import type { TheirStackJob } from "@/src/lib/theirstack";
+import config from "@/src/config.json";
 
 export default function OffersSearchFilter() {
   const [loading, setLoading] = React.useState(false);
@@ -13,7 +14,7 @@ export default function OffersSearchFilter() {
   const [offers, setOffers] = React.useState<TheirStackJob[]>([]);
   const [searchParams, setSearchParams] = React.useState<any | null>(null);
   const [page, setPage] = React.useState(0);
-  const LIMIT = 1;
+  const LIMIT = config.offers.limit;
   const STORAGE_KEY = "internfinder:offers:last";
   // Pas d'infinite scroll: pagination contrôlée par boutons
 
@@ -44,10 +45,10 @@ export default function OffersSearchFilter() {
     try {
       const fromForm = formDataOrParams instanceof FormData;
       const body: any = {
-        posted_at_max_age_days: 30,
+        posted_at_max_age_days: config.offers.postedAtMaxAgeDays,
         limit: LIMIT,
         include_total_results: false,
-        employment_statuses_or: ["internship"],
+        employment_statuses_or: config.offers.employmentStatuses,
       };
       if (fromForm) {
         const q = String((formDataOrParams as FormData).get("q") || "").trim();

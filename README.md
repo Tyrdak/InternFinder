@@ -55,57 +55,33 @@ npm run dev
 - Aller sur `/offers`
 - Rechercher (mots‑clés, lieu). L’API interne appelle TheirStack et renvoie 1 offre (limitation de crédits).
 
-## 📈 Afficher et demander plusieurs offres par clic sur « Rechercher »
+## 📈 Configuration du nombre d'offres affichées
 
-Objectif: à chaque clic sur le bouton « Rechercher », récupérer et afficher plusieurs offres (p. ex. 5), voire charger des offres supplémentaires à chaque clic successif.
+Le nombre d'offres est centralisé dans **`src/config.json`** :
 
-1) Côté API (`app/api/offers/route.ts`)
-- Assurez‑vous que la requête accepte `limit` et optionnellement `offset`/`page` en entrée (body JSON), et transmet ces valeurs à l’API TheirStack.
-- Par défaut, remplacez `limit: 1` par une valeur plus élevée (p. ex. `5`).
-
-Exemple de body attendu:
 ```json
 {
-  "query": "stage développeur",
-  "location": "Lyon",
-  "limit": 5,
-  "offset": 0
+  "offers": {
+    "limit": 1,
+    "postedAtMaxAgeDays": 30,
+    "employmentStatuses": ["internship"]
+  }
 }
 ```
 
-2) Côté frontend (`app/offers/page.tsx` et `src/components/pages/offers/OffersSearchFilter.tsx`)
-- Conservez un état `limit` (p. ex. 5) et un état `offset` (ou `page`).
-- Au premier clic, appelez l’API avec `{ limit, offset: 0 }` puis affichez la liste.
-- Au clic suivant, incrémentez `offset` (p. ex. `offset + limit`) et appelez à nouveau l’API en concaténant les résultats au tableau existant.
+- `limit` : nombre d'offres retournées par recherche (limite stricte appliquée au frontend et à l'API)
+- `postedAtMaxAgeDays` : ancienneté maximale des offres (jours)
+- `employmentStatuses` : types d'emploi recherchés
 
-Exemple minimal de logique (React):
-```tsx
-const [offers, setOffers] = useState([]);
-const [limit] = useState(5);
-const [offset, setOffset] = useState(0);
+➡️ Pour afficher plusieurs offres, modifiez uniquement `limit` dans ce fichier (ex: `5`, `10`).
 
-async function onSearch(params) {
-  const res = await fetch('/api/offers', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...params, limit, offset })
-  });
-  const data = await res.json();
-  setOffers(prev => [...prev, ...data.items]);
-  setOffset(prev => prev + limit);
-}
-```
-
-Conseils:
-- Pour « remplacer » au lieu d’« ajouter », remettez `offset` à `0` et faites `setOffers(data.items)`.
-- Affichez un bouton « Charger plus » si vous préférez séparer recherche et pagination.
-- Gérez la fin des résultats en désactivant le bouton si `data.items.length < limit`.
+**Guide détaillé** : voir [📄 Guide Offres](src/components/pages/offers/README.md) pour la pagination, l'affichage multiple, et le cache navigateur.
 
 ## 🔌 Intégration TheirStack
 
 - Endpoint: `POST https://api.theirstack.com/v1/jobs/search`
 - Auth: `Authorization: Bearer THEIRSTACK_API_KEY`
-- Filtres par défaut: `employment_statuses_or: ["internship"]`, `limit: 1`, `posted_at_max_age_days: 30`
+- Filtres par défaut: définis dans `src/config.json` (voir ci-dessus)
 - Code: `src/lib/theirstack.ts` + `app/api/offers/route.ts`
 
 ## 🔐 Variables d’environnement et `.env.example`
@@ -139,16 +115,18 @@ app/
   offers/
   api/offers/route.ts
   error.tsx, global-error.tsx, not-found.tsx
-src/components/
-  layout/
-  pages/
-    enterprise/
-    students/
-    home/
-    offers/
-  ui/
-src/lib/
-  theirstack.ts, markdown.ts
+src/
+  config.json (⚠️ configuration centralisée: limite, filtres)
+  components/
+    layout/
+    pages/
+      enterprise/
+      students/
+      home/
+      offers/
+    ui/
+  lib/
+    theirstack.ts, markdown.ts
 ```
 
 ## 🧭 UI/UX

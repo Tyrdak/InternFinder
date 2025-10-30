@@ -19,10 +19,20 @@ Le composant inclut des commentaires pour basculer entre les deux modes (recherc
 
 ---
 
-### 3) Limite stricte par page
-- La constante `LIMIT` dans `OffersSearchFilter.tsx` définit le nombre d’offres maximum par page.
-- L’UI n’affiche jamais plus que `LIMIT` éléments par page.
-- L’API reçoit `limit: LIMIT` et `page`.
+### 3) Limite stricte par page (configurée via JSON)
+- La limite est définie dans `src/config.json` sous `offers.limit`.
+- L'UI n'affiche jamais plus que cette limite par page.
+- L'API utilise cette même limite.
+- Pour changer, éditez `src/config.json` :
+  ```json
+  {
+    "offers": {
+      "limit": 5,
+      "postedAtMaxAgeDays": 30,
+      "employmentStatuses": ["internship"]
+    }
+  }
+  ```
 
 ---
 
@@ -35,6 +45,7 @@ Le composant inclut des commentaires pour basculer entre les deux modes (recherc
 ### 5) Chemins utiles
 - Composant: `src/components/pages/offers/OffersSearchFilter.tsx`
 - API: `app/api/offers/route.ts`
+- Configuration: `src/config.json`
 
 ---
 
